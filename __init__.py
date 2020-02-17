@@ -1,0 +1,1 @@
+from .wrf import WassersteinRandomForest
