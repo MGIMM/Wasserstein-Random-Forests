@@ -1,6 +1,9 @@
 # Wasserstein-Random-Forests
 A Random Forests-based conditional distribution estimator.
 
+<img src="fig/multimodal.png" height="500" />
+
+
 ## Installation
 
 WassersteinRandomForest mainly depends on NumPy and Cython. So make sure these dependencies are installed using pip:
@@ -63,3 +66,16 @@ Y,W = ref.predict_distribution(X = np.random.uniform(0,1,(1,4)))
 ## Example
 
 A generic example with visulization can be found in `./test/test.py`.
+
+## Remarks
+
+* The computational cost of Wasserstein Random Forests are slightly hight than
+  the Breiman's Random Forests. In order to balance the performance and
+  computational costs, the `subsample` should be small. In practice, one can
+  choose `subsample` such that each tree is constructed with 200 to 500 data
+  points;
+
+* Currently, the package only provides an accelaration for the splitting
+  mechanism. The tree construction and prediction are still implemented by raw
+  python code. At the moment, I do not have time and ability to provide a fully optimized version.
+
