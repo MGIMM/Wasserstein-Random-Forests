@@ -267,7 +267,14 @@ class DecisionTree:
     def fit(self,X,Y):
         self.Y = Y
         N,d = X.shape 
-        S_b = np.random.choice(range(N), int(N*self.subsample), replace  = self.bootstrap)
+        if self.subsample <= 1:
+            subsample_size = int(N*self.subsample)
+        else if self.subsample > 1:
+            subsample_size = int(self.subsample)
+        else:
+            subsample_size = 100
+            print("Wrong subsample is given, used subsample = 100 as default.")
+        S_b = np.random.choice(range(N), subsample_size, replace  = self.bootstrap)
         self.nodes = node(neighbours = S_b)
         P =[self.nodes] 
         while P:

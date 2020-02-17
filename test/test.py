@@ -18,7 +18,6 @@ def obj_func(x):
     #     #c *= x[i]*np.sin(i)
     #     c += x[i]*np.sin(i)
     return 10*x[1] + x[2]
-    return c
 def obj_func2(x):
     """
     conditional variance
@@ -28,17 +27,17 @@ def obj_func2(x):
     return np.max([x[3]*9., 0.2])
     #return 0.5
 
-def obj_func3(x):
-    """
-    conditional expectation
-    """
-    #return x[1]+2.*x[2] +2. +np.sin(2.*x[0])
-    c = 0
-    for i in range(4,7):
-        #c *= x[i]*np.sin(i)
-        c += x[i]*np.cos(i)
-    #return x[1] + x[2]
-    return c
+# def obj_func3(x):
+#     """
+#     conditional expectation
+#     """
+#     #return x[1]+2.*x[2] +2. +np.sin(2.*x[0])
+#     c = 0
+#     for i in range(4,7):
+#         #c *= x[i]*np.sin(i)
+#         c += x[i]*np.cos(i)
+#     #return x[1] + x[2]
+#     return c
 
 
 #Y = np.random.normal(0,1.,N_total) + np.apply_along_axis(obj_func,1,X)
@@ -52,12 +51,12 @@ for i in range(N_total):
         #Y[i] = np.random.normal(-1.5*obj_func2(X[i]),1,1)
         #Y[i] = np.random.normal(obj_func3(X[i]),1,1)
 
-        Y[i] = np.random.normal(-1,1,1)
-        #Y[i] = np.random.normal(obj_func(X[i]),np.sqrt(obj_func2(X[i])),1)
+        #Y[i] = np.random.normal(-1,1,1)
+        Y[i] = np.random.normal(obj_func(X[i]),np.sqrt(obj_func2(X[i])),1)
 
 reg = WassersteinRandomForest(nodesize = 2,
                              bootstrap = False,
-                             subsample = 0.005,
+                             subsample = 200,
                              n_estimators = 500,
                              mtry = 4,
                              #n_jobs = 1,
@@ -106,3 +105,19 @@ for IndexPlot in range(9):
     plt.grid(linestyle = "-.",color="lightgrey")
     plt.legend()
 plt.show()
+
+# calculate average Wp distance with 100 points in test dataset
+from ot import wasserstein_1d
+predlist = []
+predlistY = []
+ideallist = []
+for i in range(100):
+    Y_c,W_c = reg.predict_distribution(X[N_train+i])
+    predlist +=[wasserstein_1d(p = 2,x_a = np.random.choice(Y_c,p=W_c,size = N_train),x_b =np.random.normal(obj_func(X[N_train+i]),np.sqrt(obj_func2(X[N_train+i])),100000))]
+    predlistY +=[wasserstein_1d(p = 2,x_a = Y[:N_train],x_b =np.random.normal(obj_func(X[N_train+i]),np.sqrt(obj_func2(X[N_train+i])),100000))]
+    ideallist += [wasserstein_1d(p = 2,x_a =np.random.normal(obj_func(X[N_train+i]),np.sqrt(obj_func2(X[N_train+i])),N_train),
+                                   x_b = np.random.normal(obj_func(X[N_train+i]),np.sqrt(obj_func2(X[N_train+i])),10000))] 
+
+print("average Wp distance:", np.mean(predlist))
+print("average Wp distance with Y (i.e., no estimation is made):", np.mean(predlistY))
+print("ideal average Wp distance", np.mean(ideallist))
