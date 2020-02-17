@@ -85,3 +85,6 @@ A generic example with visulization is provided in `./test/test.py`.
   mechanism. The tree construction and prediction are still implemented with raw
   python code. At the moment, I do not have time and ability to provide a fully optimized version.
 
+## Reference
+
+Wasserstein Random Forests at first glance. \[[pdf](https://mgimm.github.io/doc/wrf-try.pdf)\]
