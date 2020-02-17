@@ -33,6 +33,11 @@ and
 pip install .
 ```
 
+### Jupyter notebook
+
+If you do not want to install the package, an **All in one** jupyter notebook
+is provided in `./notebook/All_in_one.ipynb`.
+
 
 ## Usage
 

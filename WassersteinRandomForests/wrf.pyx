@@ -228,6 +228,8 @@ def Wp_split(int[:] A,
 
     return direction_list[index_max], value_list[index_max] 
 
+@cython.boundscheck(False) 
+@cython.wraparound(False)    
 cdef int my_argmax(vector[double] x) nogil:
     cdef int i
     cdef int _i = 0
@@ -269,7 +271,7 @@ class DecisionTree:
         N,d = X.shape 
         if self.subsample <= 1:
             subsample_size = int(N*self.subsample)
-        else if self.subsample > 1:
+        elif self.subsample > 1:
             subsample_size = int(self.subsample)
         else:
             subsample_size = 100
