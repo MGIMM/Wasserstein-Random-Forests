@@ -10,7 +10,7 @@ extensions = [Extension("WassersteinRandomForests", sourcefiles)]
 setup(
     ext_modules=cythonize(extensions),
     name='WassersteinRandomForests',
-    version='0.0.1',
+    version='0.0.2',
     description='A Random Forests variant that estimates the conditional distribution.',
     url='https://github.com/MGIMM/Wasserstein-Random-Forests',
     author='Qiming Du',
@@ -19,8 +19,8 @@ setup(
     packages=['WassersteinRandomForests'],
     install_requires=[
            'tqdm',
-           'joblib',
-           'seaborn'
+           #'joblib',
+           #'seaborn'
        ],
     zip_safe=False
 )
