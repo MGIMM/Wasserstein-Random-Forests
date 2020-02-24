@@ -109,25 +109,56 @@ cdef double _calculate_Wp_difference(int[:] A,
                                      double split_value,
                                      double[:,:] X,
                                      double[:] Y,
-                                     int p = 2):
+                                     int p = 2) nogil:
     cdef int A_size = A.shape[0]
-    cdef vector[double] Y_left
-    cdef vector[double] Y_right
-    Y_left.reserve(A_size)
-    Y_right.reserve(A_size)
-    
     cdef int i
     cdef int _i
+
+    cdef vector[double] Y_left
+    cdef vector[double] Y_right
+    cdef vector[double] Y_both
+    Y_left.reserve(A_size)
+    Y_right.reserve(A_size)
+    Y_both.reserve(A_size)
+    
     for i in range(A_size):
         _i = A[i]
+        Y_both.push_back(Y[_i])
         if X[_i,split_direction] < split_value:
             Y_left.push_back(Y[_i])
             #Y_left.push_back(1)
         else:
             Y_right.push_back(Y[_i])
             #Y_right.push_back(1)
-    return _Wp(P = Y_left,Q = Y_right, p = p) 
-    #return ot.wasserstein_1d(np.array(Y_left),np.array(Y_right), p = p)
+    cdef double result = 0
+    
+    # cdef double mean_Y = my_mean(Y_both)
+    # cdef double mean_L = my_mean(Y_left)
+    # cdef double mean_R = my_mean(Y_right)
+    # 
+    # # cdef double result_L = 0
+    # # cdef double result_R = 0
+    # for i in range(A_size):
+    #     result += (Y[i]-mean_Y)*(Y[i]-mean_Y)
+    #     #result += my_w1(Y_both[i],Y_both)
+    # for i in range(Y_left.size()):
+    #     result -= (Y_left[i]-mean_L)*(Y_left[i]-mean_L)
+    #     #result -= my_w1(Y_left[i],Y_left)
+    # for i in range(Y_right.size()):
+    #     result -= (Y_right[i]-mean_R)*(Y_right[i]-mean_R)
+    #     #result -= my_w1(Y_right[i],Y_right)
+   
+    
+    
+    #return _Wp(P = Y_left,Q = Y_right, p = p)+_Wp(P = Y_both,Q = Y_right, p = p)+_Wp(P = Y_both,Q = Y_left, p = p)
+    #return _Wp(P = Y_left,Q = Y_right, p = p)+float(Y_right.size())/float(A_size)*_Wp(P = Y_both,Q = Y_right, p = p)+float(Y_left.size())/float(A_size)*_Wp(P = Y_both,Q = Y_left, p = p)
+    
+    # a good choice
+    return float(Y_right.size())*_Wp(P = Y_both,Q = Y_right, p = p)+float(Y_left.size())*_Wp(P = Y_both,Q = Y_left, p = p)
+
+    # return result
+
+
 
 @cython.boundscheck(False) 
 @cython.wraparound(False)    

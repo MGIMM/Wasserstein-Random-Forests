@@ -47,26 +47,26 @@ import numpy as np
 from WassersteinRandomForests import WassersteinRandomForest  
 
 # generate synthetic data
-X = np.random.uniform(0,1,(10000,4))
+X = np.random.uniform(0,1,(1000,50))
 Y = np.array([np.random.normal(2.*X[i,0],2.*X[i,1],1) for i in
-range(10000)]).reshape(10000,)
+range(1000)]).reshape(1000,)
 
 reg = WassersteinRandomForest(nodesize = 2, # upper bound of the leaves 
                               bootstrap = False, # bootstrap 
                               subsample = 200, # when subsample <= 1, subsample is the resampling rate; when subsample >1, sumbsample = number of sample points for each tree 
-                              n_estimators = 500, # number of decision trees
-                              mtry = 4, # max features used for splitting
+                              n_estimators = 100, # number of decision trees
+                              mtry = 40, # max features used for splitting
                               #n_jobs = 2, # currently unavailable
                               p = 2) # order of Wasserstein distance
 reg.fit(X,Y)
 
 # predict conditional expectation on a new point
 
-ref.predict(X = np.random.uniform(0,1,(1,4)))
+ref.predict(X = np.random.uniform(0,1,(1,50)))
 
 # predict conditional distribution on a new point
 
-Y,W = ref.predict_distribution(X = np.random.uniform(0,1,(1,4)))
+Y,W = reg.predict_distribution(X = np.random.uniform(0,1,(1,50)))
 
 # The final output is the weighted empirical measure Y*W.
 
