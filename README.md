@@ -62,7 +62,7 @@ reg.fit(X,Y)
 
 # predict conditional expectation on a new point
 
-ref.predict(X = np.random.uniform(0,1,(1,50)))
+reg.predict(X = np.random.uniform(0,1,(1,50)))
 
 # predict conditional distribution on a new point
 
