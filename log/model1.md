@@ -46,8 +46,11 @@ reg = RandomForest(nodesize = 5,
 R2: 0.957001750809336
 
 MSE: 0.5070201440616019
+
 average Wp distance: 0.6478838876699471
+
 average Wp distance with Y (i.e., no estimation is made): 2.555506060589508
+
 ideal average Wp distance 0.05320298591960361
 
 # Wasserstein RF
@@ -66,7 +69,11 @@ reg = WassersteinRandomForest(nodesize = 5,
 ## results
 
 R2: 0.9600643112379628
+
 MSE: 0.504617881459418
+
 average Wp distance: 0.6086505446860154
+
 average Wp distance with Y (i.e., no estimation is made): 2.18645137665258
+
 ideal average Wp distance 0.052722513866543926
