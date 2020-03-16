@@ -87,4 +87,4 @@ A generic example with visulization is provided in `./test/test.py`.
 
 ## Reference
 
-Wasserstein Random Forests at first glance. \[[pdf](https://mgimm.github.io/doc/wrf-try.pdf)\]
+Wasserstein Random Forests at first glance. \[[pdf](https://mgimm.github.io/doc/working/wrf-try_protected.pdf)\]
