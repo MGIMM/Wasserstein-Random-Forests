@@ -69,15 +69,17 @@ reg = WassersteinRandomForest(nodesize = 5, # upper bound of the leaves
                               p = 2, # order of Wasserstein distance
                               interpretation = "intra", # methods in ["inter","intra"], note that when "intra" is selected, p is automatically selected as 2. 
                               ) 
+# training 
+
 reg.fit(X,Y)
 
 # predict conditional expectation on a new point
 
-reg.predict(X = np.random.uniform(0,1,(1,50)))
+reg.predict(np.random.normal(0,1,50).reshape(1,50))
 
 # predict conditional distribution on a new point
 
-Y,W = reg.predict_distribution(X = np.random.uniform(0,1,(1,50)))
+Y,W = reg.predict_distribution(np.random.normal(0,1,50).reshape(50,))
 
 # The final output is the weighted empirical measure Y*W.
 
@@ -96,5 +98,5 @@ All the average running time on a single core of the CPU: Intel(R) Core(TM) i5-7
 ## References
 
 * Wasserstein Random Forests and Applications in Heterogenerous Treatment
-  Effects. [arXiv](http://arxiv.org/abs/2006.04709)
+  Effects. [\[arXiv\]](http://arxiv.org/abs/2006.04709)
 
