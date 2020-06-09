@@ -1,28 +1,42 @@
 # Wasserstein-Random-Forests
 A Random Forests-based conditional distribution estimator:
 
-(X_i,Y_i; 1<= i <= n) + WRF estimate L(Y | X = x) for each x in Supp(X) given X ~ law(X) and Y | X = x ~ L(Y | X = x).
+(X_i,Y_i; 1<= i <= n) + WRF estimate L(Y | X = x) for each x in Supp(X).
 
 <img src="fig/multimodal.png" height="500" />
 
 
-## Installation
+## Installation and Dependencies
 
-**WassersteinRandomForest** is based on NumPy and Cython. So make sure these packages are installed using `pip`:
+### Dependencies
+
+**WassersteinRandomForest** is based on `NumPy` and `Cython`. 
+So, make sure these packages are installed. For example, you can install them with `pip`:
 
 ```
 pip3 install setuptools numpy cython
 ```
 
-The rest of the dependences will be automatically installed when building.
+The rest of the dependences (currently, `tqdm`) will be automatically installed
+when building. For `Windows 10` user, you will need to make sure `Visual
+Studio` is installed properly and all the `c++` dependencies are available.
+For `linux` user, make sure `python3-dev` and `gcc` are installed properly.
+
+In addition, you also need:
+
+* `jupyter` for jupyter notebooks;
+
+* `seaborn` and `matplotlib` in order to be able to test all the visualizations;
+
+* `pickle` to save and load models;
+
+* `POT` to compare Wasserstein-1d distance.
+
+Finally, it is recommend to use `Python 3.7` from [Anaconda](https://www.anaconda.com/) distribution. All the codes for the article are tested on Ubuntu 20.04.
 
 
 ### Install from source:
 
-Clone the git repository:
-```
-git clone https://github.com/MGIMM/Wasserstein-Random-Forests.git
-```
 Install with `pip`:
 
 ```
@@ -33,10 +47,6 @@ and
 pip install .
 ```
 
-### Jupyter notebook
-
-If you do not want to install the package, an **All in one** jupyter notebook
-is provided in `./notebook/All_in_one.ipynb`.
 
 
 ## Usage
@@ -51,13 +61,14 @@ X = np.random.uniform(0,1,(1000,50))
 Y = np.array([np.random.normal(2.*X[i,0],2.*X[i,1],1) for i in
 range(1000)]).reshape(1000,)
 
-reg = WassersteinRandomForest(nodesize = 2, # upper bound of the leaves 
-                              bootstrap = False, # bootstrap 
-                              subsample = 200, # when subsample <= 1, subsample is the resampling rate; when subsample >1, sumbsample = number of sample points for each tree 
+reg = WassersteinRandomForest(nodesize = 5, # upper bound of the leaves 
+                              bootstrap = True, # bootstrap 
+                              subsample = 500, # when subsample <= 1, subsample is the resampling rate; when subsample >1, sumbsample = number of sample points for each tree 
                               n_estimators = 100, # number of decision trees
                               mtry = 40, # max features used for splitting
-                              #n_jobs = 2, # currently unavailable
-                              p = 2) # order of Wasserstein distance
+                              p = 2, # order of Wasserstein distance
+                              interpretation = "intra", # methods in ["inter","intra"], note that when "intra" is selected, p is automatically selected as 2. 
+                              ) 
 reg.fit(X,Y)
 
 # predict conditional expectation on a new point
@@ -72,19 +83,18 @@ Y,W = reg.predict_distribution(X = np.random.uniform(0,1,(1,50)))
 
 ```
 
-A generic example with visulization is provided in `./test/test.py`.
+To reproduce the results and visualizations in the main text, a `jupyter notebook` and a `.html` file are provided
+in `./notebooks/Main_text.ipynb`.
 
-## Remarks
+## Remarks on training time 
 
-* The computational costs of Wasserstein Random Forests are slightly higher than
-  the Breiman's Random Forests (O(n) vs O(nlogn) for the splitting where n denote the number of data points at current node). 
-  In order to balance the performance and training time, the size of sample points `subsample` should be relatively small. In practice, one can
-  choose `subsample` such that each tree is constructed with 200 to 500 data points.
+Currently, the package only provides an `Cython` accelaration for the splitting
+mechanism. The tree construction and prediction are still implemented with raw
+`python` code.
+All the average running time on a single core of the CPU: Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz can be found in `./notebooks/Main_text.ipynb`.
 
-* Currently, the package only provides an `cython` accelaration for the splitting
-  mechanism. The tree construction and prediction are still implemented with raw
-  python code. At the moment, I do not have time and ability to provide a fully optimized version.
+## References
 
-## Reference
+* Wasserstein Random Forests and Applications in Heterogenerous Treatment
+  Effects. [arXiv](http://arxiv.org/abs/2006.04709)
 
-Wasserstein Random Forests at first glance. \[[pdf](https://mgimm.github.io/doc/working/wrf-try_protected.pdf)\]
